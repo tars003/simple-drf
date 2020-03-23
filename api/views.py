@@ -10,9 +10,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 
 from rest_framework.permissions import IsAuthenticated
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 class CategoryView(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
@@ -46,11 +50,15 @@ class GoogleView(APIView):
             user.email = data['email']
             user.save()
 
-        token = RefreshToken.for_user(user)  # generate token without username & password
+        # token = RefreshToken.for_user(user)  # generate token without username & password
+
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+
         response = {}
         response['username'] = user.username
-        response['access_token'] = str(token.access_token)
-        response['refresh_token'] = str(token)
+        response['access_token'] = str(token)
+        # response['refresh_token'] = str(token)
         return Response(response)
 
 
