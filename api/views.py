@@ -9,7 +9,6 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 
